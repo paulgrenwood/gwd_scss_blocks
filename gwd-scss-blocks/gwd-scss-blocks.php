@@ -2,7 +2,7 @@
 /*
 Plugin Name: GWD SCSS Block
 Description: Custom post type and styles for SCSS blocks.
-Version: 1.0
+Version: 1.02
 Author: Wandering Woods Studio
 */
 
@@ -131,7 +131,7 @@ function gwd_custom_fields_callback($post) {
 		<option value="Conditional Selector" <?php selected($location_value, 'Conditional Selector'); ?>>Conditional Selector</option>
 	</select><br><br/>
  
-	<label for="gwd_scss_block_conditional_selector">Module Name</label>
+	<label for="gwd_scss_block_conditional_selector">Module Name:</label>
 	<input type="text" id="gwd_scss_block_conditional_selector" name="gwd_scss_block_conditional_selector" value="<?php echo esc_attr($conditional_selector); ?>"><br><br/>
  
 	<label for="gwd_scss_block_priority">Priority:</label>

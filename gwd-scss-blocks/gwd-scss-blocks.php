@@ -2,7 +2,7 @@
 /*
 Plugin Name: GWD SCSS Block
 Description: Custom post type and styles for SCSS blocks.
-Version: 1.1.2
+Version: 1.1.3
 Author: Wandering Woods Studio
 */
 
@@ -138,6 +138,7 @@ function gwd_custom_fields_callback($post) {
 	<select id="gwd_scss_block_location" name="gwd_scss_block_location">
 		<option value="Entire Website" <?php selected($location_value, 'Entire Website'); ?>>Entire Website</option>
 		<option value="Conditional Selector" <?php selected($location_value, 'Conditional Selector'); ?>>Conditional Selector</option>
+		<option value="Dependancy Block" <?php selected($location_value, 'Dependancy Block');?>>Dependancy Block</option>
 	</select><br><br/>
  
 	<label for="gwd_scss_block_conditional_selector">(Conditional) Module Name:</label>
@@ -425,6 +426,13 @@ function gwd_enqueue_scss_styles() {
 		'post_type' => 'gwd_scss_block',
 		'post_status' => 'publish',
 		'posts_per_page' => -1, // Retrieve all posts
+		'meta_query' => array(
+			  array(
+				  'key' => 'gwd_scss_block_location',
+				  'value' => 'Dependancy Block',
+				  'compare' => '!=' // Compare for exact match
+			  ),
+		),
 		'meta_key' => 'gwd_scss_block_priority', // Specify the custom meta key
 		'orderby' => 'meta_value_num', // Order by numeric value
 		'order' => 'ASC', // Sort in ascending order (low to high)

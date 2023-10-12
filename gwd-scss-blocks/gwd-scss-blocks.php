@@ -2,7 +2,7 @@
 /*
 Plugin Name: GWD SCSS Block
 Description: Custom post type and styles for SCSS blocks.
-Version: 1.1.5
+Version: 1.1.6
 Author: Wandering Woods Studio
 */
 
@@ -258,16 +258,17 @@ function gwd_save_custom_fields($post_id) {
 		delete_post_meta($post_id, 'gwd_scss_block_dependancies');
 	}
 	
-	
-	$modified_time = get_post_modified_time('Y-m-d H:i:s', false, $post_id);
-	
-	$scss = new Compiler();
-	$compiled_css = $scss->compile($codemirror_content_fixed);
-	
-	$upload_dir = wp_upload_dir();
-	$scss_dir = $upload_dir['basedir'] . '/gwd_scss_block';
-	$scss_file = $scss_dir . '/' . $post_id . '.css';
-	file_put_contents($scss_file, stripslashes( $compiled_css ) );
+	if (isset($_POST['gwd_codemirror_content'])) {
+		$modified_time = get_post_modified_time('Y-m-d H:i:s', false, $post_id);
+		
+		$scss = new Compiler();
+		$compiled_css = $scss->compile($codemirror_content_fixed);
+		
+		$upload_dir = wp_upload_dir();
+		$scss_dir = $upload_dir['basedir'] . '/gwd_scss_block';
+		$scss_file = $scss_dir . '/' . $post_id . '.css';
+		file_put_contents($scss_file, stripslashes( $compiled_css ) );
+	}
 	
 	/*======
 	 * ALLCSS COMPILE

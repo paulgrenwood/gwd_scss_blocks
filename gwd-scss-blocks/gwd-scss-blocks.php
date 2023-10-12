@@ -2,7 +2,7 @@
 /*
 Plugin Name: GWD SCSS Block
 Description: Custom post type and styles for SCSS blocks.
-Version: 1.1.3
+Version: 1.1.4
 Author: Wandering Woods Studio
 */
 
@@ -200,6 +200,15 @@ function sanitize($input) {
 	}
 	return $output;
 }
+
+function gwd_sanitize_scss($input){
+	$codemirror_content_notags = strip_tags( $input );
+	$codemirror_content_filtered = $codemirror_content_notags;
+	$codemirror_content_filtered = wp_filter_nohtml_kses( $codemirror_content_notags );
+	$codemirror_content_fixed = str_replace( scss_code_elements_find_and_replace(false), scss_code_elements_find_and_replace( true ), $codemirror_content_filtered );
+	
+	return $codemirror_content_fixed;
+}
  
 function gwd_save_custom_fields($post_id) {
 	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
@@ -208,10 +217,11 @@ function gwd_save_custom_fields($post_id) {
  
 	// Save the custom fields
 	if (isset($_POST['gwd_codemirror_content'])) {
-		$codemirror_content_notags = strip_tags( $_POST['gwd_codemirror_content'] );
+		$codemirror_content_fixed = gwd_sanitize_scss( $_POST['gwd_codemirror_content'] );
+		/*$codemirror_content_notags = strip_tags( $_POST['gwd_codemirror_content'] );
 		$codemirror_content_filtered = $codemirror_content_notags;
 		$codemirror_content_filtered = wp_filter_nohtml_kses( $codemirror_content_notags );
-		$codemirror_content_fixed = str_replace( scss_code_elements_find_and_replace(false), scss_code_elements_find_and_replace( true ), $codemirror_content_filtered );
+		$codemirror_content_fixed = str_replace( scss_code_elements_find_and_replace(false), scss_code_elements_find_and_replace( true ), $codemirror_content_filtered );*/
 		
 		//$codemirror_content_fixed = sanitize( $_POST['gwd_codemirror_content'] );
 		 
@@ -233,6 +243,14 @@ function gwd_save_custom_fields($post_id) {
 	if (isset($_POST['gwd_scss_block_dependancies'])) {
 		$selected_scss_blocks = array_map('intval', $_POST['gwd_scss_block_dependancies']);
 		update_post_meta($post_id, 'gwd_scss_block_dependancies', $selected_scss_blocks);
+		
+		$scss_with_dependancies = '';
+		foreach( $selected_scss_blocks as $scss_dependancy_block ){
+			$scss_with_dependancies .= get_post_meta( $scss_dependancy_block, 'gwd_codemirror_content', true );
+		}
+		if( !empty( $scss_with_dependancies ) ){
+			$codemirror_content_fixed = $scss_with_dependancies . $codemirror_content_fixed;
+		}
 	} else {
 		delete_post_meta($post_id, 'gwd_scss_block_dependancies');
 	}

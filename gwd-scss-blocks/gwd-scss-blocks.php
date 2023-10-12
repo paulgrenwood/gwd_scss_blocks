@@ -160,7 +160,7 @@ function gwd_custom_fields_callback($post) {
 			$selected_values = explode(',', $selected_values);
 		}
 	
-		echo '<label for="gwd_scss_block_dependancies">Dependancies:</label>';
+		echo '<br/><br/><label for="gwd_scss_block_dependancies">Dependancies:</label>';
 		echo '<select name="gwd_scss_block_dependancies[]" id="gwd_scss_block_dependancies" multiple>';
 	
 		foreach ($all_scss_blocks as $block) {

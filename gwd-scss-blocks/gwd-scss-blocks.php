@@ -250,6 +250,8 @@ function scss_code_elements_find_and_replace( $replace = false ){
 		'&lt;',
 		"\'",
 		'\"',
+		'"\\',
+		"'\\",
 	);
 	
 	$code_elements_replace = array(
@@ -258,6 +260,8 @@ function scss_code_elements_find_and_replace( $replace = false ){
 		'<',
 		"'",
 		'"',
+		'"\',
+		"'\",
 	);
 	
 	if( $replace == true ){

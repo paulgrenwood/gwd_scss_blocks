@@ -2,7 +2,7 @@
 /*
 Plugin Name: GWD SCSS Block
 Description: Custom post type and styles for SCSS blocks.
-Version: 1.1.4
+Version: 1.1.5
 Author: Wandering Woods Studio
 */
 
@@ -244,12 +244,15 @@ function gwd_save_custom_fields($post_id) {
 		$selected_scss_blocks = array_map('intval', $_POST['gwd_scss_block_dependancies']);
 		update_post_meta($post_id, 'gwd_scss_block_dependancies', $selected_scss_blocks);
 		
-		$scss_with_dependancies = '';
-		foreach( $selected_scss_blocks as $scss_dependancy_block ){
-			$scss_with_dependancies .= get_post_meta( $scss_dependancy_block, 'gwd_codemirror_content', true );
-		}
-		if( !empty( $scss_with_dependancies ) ){
-			$codemirror_content_fixed = $scss_with_dependancies . $codemirror_content_fixed;
+		
+		if (isset($_POST['gwd_codemirror_content'])) {
+			$scss_with_dependancies = '';
+			foreach( $selected_scss_blocks as $scss_dependancy_block ){
+				$scss_with_dependancies .= get_post_meta( $scss_dependancy_block, 'gwd_codemirror_content', true );
+			}
+			if( !empty( $scss_with_dependancies ) ){
+				$codemirror_content_fixed = $scss_with_dependancies . $codemirror_content_fixed;
+			}
 		}
 	} else {
 		delete_post_meta($post_id, 'gwd_scss_block_dependancies');

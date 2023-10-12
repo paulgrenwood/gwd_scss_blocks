@@ -2,7 +2,7 @@
 /*
 Plugin Name: GWD SCSS Block
 Description: Custom post type and styles for SCSS blocks.
-Version: 1.18
+Version: 1.1.0
 Author: Wandering Woods Studio
 */
 
@@ -126,6 +126,12 @@ function gwd_custom_fields_callback($post) {
 	$conditional_selector = get_post_meta($post->ID, 'gwd_scss_block_conditional_selector', true);
 	$priority_value = get_post_meta($post->ID, 'gwd_scss_block_priority', true);
  
+ 	// Get all "gwd_scss_block" posts
+	 $scss_blocks = get_posts(array(
+		 'post_type' => 'gwd_scss_block',
+		 'posts_per_page' => -1,
+	 ));
+ 
 	// Output HTML for the fields
 	?>
 	<br/><label for="gwd_scss_block_location">Where to Include:</label>
@@ -146,6 +152,20 @@ function gwd_custom_fields_callback($post) {
 		?>
 	</select>
 	<?php
+	
+	if ($scss_blocks) {
+		// Initialize an array to store selected options
+		$selected_values = get_post_meta($post->ID, 'selected_scss_blocks', true);
+	
+		echo '<label for="selected_scss_blocks">Dependancies:</label>';
+		echo '<select name="selected_scss_blocks[]" id="selected_scss_blocks" multiple>';
+	
+		foreach ($scss_blocks as $block) {
+			echo '<option value="' . esc_attr($block->ID) . '" ' . selected(in_array($block->ID, $selected_values), true, false) . '>' . esc_html($block->post_title) . '</option>';
+		}
+	
+		echo '</select>';
+	}
 }
 
 function cleanInput($input) {
@@ -179,6 +199,7 @@ function sanitize($input) {
  
 function gwd_save_custom_fields($post_id) {
 	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+	if (wp_is_post_revision($post_id)) return;
 	if ('gwd_scss_block' !== get_post_type($post_id)) return;
  
 	// Save the custom fields
@@ -203,6 +224,13 @@ function gwd_save_custom_fields($post_id) {
  
 	if (isset($_POST['gwd_scss_block_priority'])) {
 		update_post_meta($post_id, 'gwd_scss_block_priority', absint($_POST['gwd_scss_block_priority']));
+	}
+	
+	if (isset($_POST['selected_scss_blocks'])) {
+		$selected_scss_blocks = array_map('intval', $_POST['selected_scss_blocks']);
+		update_post_meta($post_id, 'selected_scss_blocks', $selected_scss_blocks);
+	} else {
+		delete_post_meta($post_id, 'selected_scss_blocks');
 	}
 	
 	

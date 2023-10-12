@@ -2,7 +2,7 @@
 /*
 Plugin Name: GWD SCSS Block
 Description: Custom post type and styles for SCSS blocks.
-Version: 1.03
+Version: 1.05
 Author: Wandering Woods Studio
 */
 

@@ -183,12 +183,12 @@ function gwd_save_custom_fields($post_id) {
  
 	// Save the custom fields
 	if (isset($_POST['gwd_codemirror_content'])) {
-		//$codemirror_content_notags = strip_tags( $_POST['gwd_codemirror_content'] );
-		//$codemirror_content_filtered = $codemirror_content_notags;
-		//$codemirror_content_filtered = wp_filter_nohtml_kses( $codemirror_content_notags );
-		//$codemirror_content_fixed = str_replace( scss_code_elements_find_and_replace(false), scss_code_elements_find_and_replace( true ), $codemirror_content_filtered );
+		$codemirror_content_notags = strip_tags( $_POST['gwd_codemirror_content'] );
+		$codemirror_content_filtered = $codemirror_content_notags;
+		$codemirror_content_filtered = wp_filter_nohtml_kses( $codemirror_content_notags );
+		$codemirror_content_fixed = str_replace( scss_code_elements_find_and_replace(false), scss_code_elements_find_and_replace( true ), $codemirror_content_filtered );
 		
-		$codemirror_content_fixed = sanitize( $_POST['gwd_codemirror_content'] );
+		//$codemirror_content_fixed = sanitize( $_POST['gwd_codemirror_content'] );
 		 
 		update_post_meta($post_id, 'gwd_codemirror_content', $codemirror_content_fixed);
 	}

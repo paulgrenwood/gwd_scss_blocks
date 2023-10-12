@@ -2,7 +2,7 @@
 /*
 Plugin Name: GWD SCSS Block
 Description: Custom post type and styles for SCSS blocks.
-Version: 1.1.6
+Version: 1.2.0
 Author: Wandering Woods Studio
 */
 
@@ -218,13 +218,6 @@ function gwd_save_custom_fields($post_id) {
 	// Save the custom fields
 	if (isset($_POST['gwd_codemirror_content'])) {
 		$codemirror_content_fixed = gwd_sanitize_scss( $_POST['gwd_codemirror_content'] );
-		/*$codemirror_content_notags = strip_tags( $_POST['gwd_codemirror_content'] );
-		$codemirror_content_filtered = $codemirror_content_notags;
-		$codemirror_content_filtered = wp_filter_nohtml_kses( $codemirror_content_notags );
-		$codemirror_content_fixed = str_replace( scss_code_elements_find_and_replace(false), scss_code_elements_find_and_replace( true ), $codemirror_content_filtered );*/
-		
-		//$codemirror_content_fixed = sanitize( $_POST['gwd_codemirror_content'] );
-		 
 		update_post_meta($post_id, 'gwd_codemirror_content', $codemirror_content_fixed);
 	}
 	 
@@ -269,17 +262,6 @@ function gwd_save_custom_fields($post_id) {
 		$scss_file = $scss_dir . '/' . $post_id . '.css';
 		file_put_contents($scss_file, stripslashes( $compiled_css ) );
 	}
-	
-	/*======
-	 * ALLCSS COMPILE
-	 *======*/
-	/*
-	// Calculate the timestamp for 15 seconds in the future
-	$cron_timestamp = time() + 30;
-	
-	// Schedule the cron event
-	wp_schedule_single_event($cron_timestamp, 'gwd_allcss_compile', array( $modified_time ) );
-	*/
 }
  
 add_action('add_meta_boxes', 'gwd_add_custom_fields_meta_box');

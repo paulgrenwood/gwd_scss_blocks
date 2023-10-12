@@ -2,9 +2,12 @@
 /*
 Plugin Name: GWD SCSS Block
 Description: Custom post type and styles for SCSS blocks.
-Version: 1.11
+Version: 1.12
 Author: Wandering Woods Studio
 */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once(plugin_dir_path(__FILE__) . 'lib/scssphp/scssphp-1.11.1/scss.inc.php');
 use ScssPhp\ScssPhp\Compiler;
@@ -144,6 +147,35 @@ function gwd_custom_fields_callback($post) {
 	</select>
 	<?php
 }
+
+function cleanInput($input) {
+
+	$search = array(
+		'@<script[^>]*?>.*?</script>@si',   // Strip out javascript
+		'@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+		'@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+		'@<![\s\S]*?--[ \t\n\r]*>@'         // Strip multi-line comments
+	);
+	
+	$output = preg_replace($search, '', $input);
+	return $output;
+}
+
+function sanitize($input) {
+	if (is_array($input)) {
+		foreach($input as $var=>$val) {
+			$output[$var] = sanitize($val);
+		}
+	}
+	else {
+		if (get_magic_quotes_gpc()) {
+			$input = stripslashes($input);
+		}
+		$input  = cleanInput($input);
+		$output = mysql_real_escape_string($input);
+	}
+	return $output;
+}
  
 function gwd_save_custom_fields($post_id) {
 	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
@@ -151,10 +183,12 @@ function gwd_save_custom_fields($post_id) {
  
 	// Save the custom fields
 	if (isset($_POST['gwd_codemirror_content'])) {
-		$codemirror_content_notags = strip_tags( $_POST['gwd_codemirror_content'] );
-		$codemirror_content_filtered = $codemirror_content_notags;
+		//$codemirror_content_notags = strip_tags( $_POST['gwd_codemirror_content'] );
+		//$codemirror_content_filtered = $codemirror_content_notags;
 		//$codemirror_content_filtered = wp_filter_nohtml_kses( $codemirror_content_notags );
-		$codemirror_content_fixed = str_replace( scss_code_elements_find_and_replace(false), scss_code_elements_find_and_replace( true ), $codemirror_content_filtered );
+		//$codemirror_content_fixed = str_replace( scss_code_elements_find_and_replace(false), scss_code_elements_find_and_replace( true ), $codemirror_content_filtered );
+		
+		$codemirror_content_fixed = sanitize( $_POST['gwd_codemirror_content'] );
 		 
 		update_post_meta($post_id, 'gwd_codemirror_content', $codemirror_content_fixed);
 	}

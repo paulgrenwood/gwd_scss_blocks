@@ -2,7 +2,7 @@
 /*
 Plugin Name: GWD SCSS Block
 Description: Custom post type and styles for SCSS blocks.
-Version: 1.08
+Version: 1.09
 Author: Wandering Woods Studio
 */
 
@@ -250,7 +250,7 @@ function scss_code_elements_find_and_replace( $replace = false ){
 		'&lt;',
 		"\'",
 		'\"',
-		'\\',
+		"\\",
 	);
 	
 	$code_elements_replace = array(
@@ -259,7 +259,7 @@ function scss_code_elements_find_and_replace( $replace = false ){
 		'<',
 		"'",
 		'"',
-		'\',
+		"\",
 	);
 	
 	if( $replace == true ){

@@ -214,7 +214,7 @@ function gwd_save_custom_fields($post_id) {
 	$upload_dir = wp_upload_dir();
 	$scss_dir = $upload_dir['basedir'] . '/gwd_scss_block';
 	$scss_file = $scss_dir . '/' . $post_id . '.css';
-	file_put_contents($scss_file, $compiled_css);
+	file_put_contents($scss_file, stripslashes($compiled_css) );
 	
 	/*======
 	 * ALLCSS COMPILE
